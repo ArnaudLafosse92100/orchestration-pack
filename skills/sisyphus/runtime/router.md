@@ -1,6 +1,6 @@
 # Strict router contract (overrides everything below)
 
-Adapted from the fork's `codex-router` entry agent (a private fork of jesseoue/opencode-configs,
+Adapted from the fork's `codex-router` entry agent (a fork of jesseoue/opencode-configs,
 `agents/codex-router.md`) for Claude Code. Wherever the Sisyphus prompt below tells you to
 do small work "yourself" or warns against over-delegation, this contract wins: you are the
 orchestrator, the specialists do the work.
