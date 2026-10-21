@@ -102,6 +102,11 @@ Le fondateur délègue à l'Orchestrateur, session <session id de l'Orchestrateu
 - Founder decision (only the six items reserved by rule 6: merge or PR to master, money/paid runs, reversing a recorded method decision, what the seller sees in a real call, any deletion on GitHub, secrets) → the scored table and a recommendation go to the founder; work continues on the recommended option meanwhile, revertible.
 - Every arbitration is recorded in state.md so the same question is never asked twice.
 
+### 8. A finished chantier without a PR or a deploy always has a named owner (founder decision 2026-10-21)
+- A topic or Piste that ends with work that is neither in an open PR nor in production (branch only, prototype, analysis, notes, a decision record) is not closed until it has an **owner**: the founder, the Orchestrateur, or a named session that will act next.
+- Its final status and state.md carry one line: `PROPRIÉTAIRE : <qui> — PROCHAINE ACTION : <quoi> — OÙ : <branche@sha ou fichier>`. « personne », « à voir » or an empty owner is not allowed; when nobody will act, the owner is the founder and the next action says « décider : garder, ouvrir une PR ou supprimer ».
+- The Orchestrateur checks this line before archiving (rule 5) and lists every owned item in the archive table it shows the founder, so no finished work is left on an orphan branch.
+
 ## 1. Preflight (always first)
 
 1. `mcp__ccd_session__list_start_targets` (ToolSearch if deferred), read `cloud`. If `available: false`, act on `reason`: `not_on_screen` → ask the user to bring this conversation on screen and retry; `no_github_remote` / `no_readable_git_checkout` → stop and explain in French, no move, no fallback. Otherwise pick a target with `hosted: true` + `fitsRepository: true`; several fit → `isDefault`, else ask. Pass its id as `environment_id` to `move_to_cloud`.
