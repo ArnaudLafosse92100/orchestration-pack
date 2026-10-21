@@ -107,6 +107,18 @@ Le fondateur délègue à l'Orchestrateur, session <session id de l'Orchestrateu
 - Its final status and state.md carry one line: `PROPRIÉTAIRE : <qui> — PROCHAINE ACTION : <quoi> — OÙ : <branche@sha ou fichier>`. « personne », « à voir » or an empty owner is not allowed; when nobody will act, the owner is the founder and the next action says « décider : garder, ouvrir une PR ou supprimer ».
 - The Orchestrateur checks this line before archiving (rule 5) and lists every owned item in the archive table it shows the founder, so no finished work is left on an orphan branch.
 
+### 9. No silent ending (founder decision 2026-10-21)
+- No session (Piste, Sous-orchestrateur, Orchestrateur) ends a run without a final status to its parent whose first line is `MESSAGE MONTANT : FINI — …`, `MESSAGE MONTANT : BLOQUÉ — <ce qu'il faut>` or `MESSAGE MONTANT : ÉCHEC — <cause>` (rule 5bis channel). Stopping on quota, error or « done » with no such line is a fault: the parent treats a child without it as silent (§5b step 0) and records it.
+
+### 10. Every pending decision has a deadline and a default (founder decision 2026-10-21)
+- Every decision sent up to the founder (rule 7) carries `ÉCHÉANCE : <date heure>` and `PAR DÉFAUT : <option recommandée>`. At the deadline with no answer, the Orchestrateur applies the default and tells the founder in one line, **only if the default is reversible**; an irreversible one (the six items reserved by rule 6) waits and is reminded once a day instead.
+
+### 11. No orphan branch (founder decision 2026-10-21)
+- When a topic closes, every `claude/*`, `chore/*` and `notes/*` branch it created is in exactly one state: merged, covered by a rule 8 owner line, or listed `À SUPPRIMER` in the final status for the founder's OK (deletion stays a founder decision, rule 6 and §9). The Orchestrateur adds that list to the archive table.
+
+### 12. Stale status goes up (founder decision 2026-10-21)
+- A topic still `en cours` whose status is older than 24 h goes up to the founder with « on continue, on met en pause ou on abandonne ? » and the last status line; the answer is recorded in state.md (pause and abandon then follow rules 8 and 11). This is on top of the 45-minute silence check of §5b step 0, which stays.
+
 ## 1. Preflight (always first)
 
 1. `mcp__ccd_session__list_start_targets` (ToolSearch if deferred), read `cloud`. If `available: false`, act on `reason`: `not_on_screen` → ask the user to bring this conversation on screen and retry; `no_github_remote` / `no_readable_git_checkout` → stop and explain in French, no move, no fallback. Otherwise pick a target with `hosted: true` + `fitsRepository: true`; several fit → `isDefault`, else ask. Pass its id as `environment_id` to `move_to_cloud`.
