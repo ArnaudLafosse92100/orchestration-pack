@@ -1,0 +1,20 @@
+{
+  "_comment": "Nested delegation: which subagent may launch which subagents with Agent. Read by scripts/build.py (prompts) and scripts/hooks/sisyphus_hooks.py (enforcement). Agents not listed are leaves. Helpers here are leaves, so chains stay bounded (lead -> hephaestus -> executor -> read-only helper at most).",
+  "read_only_helpers": ["explore", "librarian", "multimodal-looker"],
+  "delegators": {
+    "hephaestus": ["explore", "librarian", "multimodal-looker", "oracle", "quick", "deep", "bug-hunt", "refactor-safe", "visual-engineering", "writing", "unspecified-low"],
+    "deep": ["explore", "librarian", "multimodal-looker"],
+    "ultrabrain": ["explore", "librarian", "multimodal-looker"],
+    "unspecified-high": ["explore", "librarian", "multimodal-looker"],
+    "bug-hunt": ["explore", "librarian", "multimodal-looker"],
+    "refactor-safe": ["explore", "librarian", "multimodal-looker"],
+    "arch-review": ["explore", "librarian", "multimodal-looker"],
+    "visual-engineering": ["explore", "librarian", "multimodal-looker"],
+    "artistry": ["explore", "librarian", "multimodal-looker"],
+    "writing": ["explore", "librarian", "multimodal-looker"],
+    "oracle": ["explore", "librarian", "multimodal-looker"],
+    "metis": ["explore", "librarian"],
+    "momus": ["explore"],
+    "plan": ["explore", "librarian"]
+  }
+}

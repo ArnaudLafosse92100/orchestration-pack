@@ -1,0 +1,4 @@
+interface:
+  display_name: "cloud"
+  short_description: "Multi-track work in Claude Code cloud sessions"
+  default_prompt: "Lance ce travail dans le cloud"

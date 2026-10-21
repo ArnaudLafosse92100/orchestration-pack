@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sisyphus"
+  short_description: "Orchestration native dans Codex et Claude Code"
+  default_prompt: "Utilise $sisyphus pour mener cette tâche avec les outils natifs disponibles."

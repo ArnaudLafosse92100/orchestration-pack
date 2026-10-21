@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "trivial-direct",
+      "prompt": "/sisyphus Return only the result of 2 + 2. Do not use tools.",
+      "max_agents": 0,
+      "must_not_edit": true
+    },
+    {
+      "id": "ultrawork-banner",
+      "prompt": "/sisyphus ulw In two sentences, what does app.py do? Do not edit files.",
+      "text_contains": [
+        "ULTRAWORK MODE ENABLED!"
+      ],
+      "must_not_edit": true
+    },
+    {
+      "id": "architecture-review",
+      "prompt": "/sisyphus Review this fixture's architecture for coupling and security posture. Read-only: do not edit files. Keep the answer under eight bullets.",
+      "must_not_edit": true,
+      "note": "Strict router: evidence wave fans out in one message; lead does not review alone.",
+      "min_agents": 2,
+      "min_parallel": 2,
+      "agents_any_of": [
+        "explore",
+        "arch-review",
+        "oracle"
+      ]
+    },
+    {
+      "id": "plan-mode-md-only",
+      "prompt": "/sisyphus plan Add input validation for report_id in the report endpoint. Clear intent: skip the interview and write the plan directly.",
+      "only_edits_under": ".omo/",
+      "product_files_unchanged": [
+        "app.py",
+        "config.py",
+        "README.md"
+      ]
+    },
+    {
+      "id": "quick-fix",
+      "prompt": "/sisyphus In README.md replace the word 'synthetic' with 'artificial'. Nothing else.",
+      "max_agents": 2,
+      "file_contains": {
+        "README.md": "artificial"
+      },
+      "agents_any_of": [
+        "quick"
+      ],
+      "lead_must_not_edit": true
+    },
+    {
+      "id": "team-review-panel",
+      "prompt": "/sisyphus team mode: run the review-panel team on this fixture (read-only review, no edits). Keep the final synthesis under ten bullets.",
+      "agents_any_of": [
+        "arch-review",
+        "bug-hunt",
+        "refactor-safe"
+      ],
+      "min_agents": 2,
+      "must_not_edit": true
+    },
+    {
+      "id": "feature-waves",
+      "prompt": "/sisyphus Add input validation for report_id in the report endpoint (reject non-numeric ids) with a unit test. Clear intent, no questions.",
+      "min_agents": 4,
+      "min_parallel": 2,
+      "lead_must_not_edit": true,
+      "agents_any_of": [
+        "hephaestus",
+        "deep",
+        "bug-hunt",
+        "quick"
+      ],
+      "file_contains": {
+        "app.py": "report_id"
+      },
+      "note": "Full strict-router waves: parallel evidence, plan+momus, executor, review panel."
+    },
+    {
+      "id": "lens-cold",
+      "prompt": "/sisyphus The previous session reported that report_id validation in the report endpoint is done and covered by tests. Check whether that is really true and, if not, fix it with a unit test.",
+      "briefs_contain_any": [
+        "lenses/assumption-breaker",
+        "lenses/experts-toolkit",
+        "lenses/goal-beyond-goal"
+      ],
+      "min_agents": 2,
+      "min_parallel": 2,
+      "lead_must_not_edit": true,
+      "note": "Cold lens activation: the prompt never names a lens; a claim from an earlier session must trigger assumption-breaker (and experts-toolkit on the fix)."
+    }
+  ]
+}

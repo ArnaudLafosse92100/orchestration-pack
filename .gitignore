@@ -1,0 +1,5 @@
+__pycache__/
+.ruff_cache/
+*.pyc
+.DS_Store
+skills/sisyphus/evals/last-run.json

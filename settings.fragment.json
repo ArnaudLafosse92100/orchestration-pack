@@ -1,0 +1,62 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {"hooks": [{"type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/sisyphus.sh\" prompt"}]}
+    ],
+    "PreToolUse": [
+      {"matcher": "Write|Edit|NotebookEdit|Agent",
+       "hooks": [{"type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/sisyphus.sh\" pretool"}]}
+    ],
+    "Stop": [
+      {"hooks": [{"type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/sisyphus.sh\" stop"}]}
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git push origin *:refs/heads/notes/*)",
+      "Bash(git push --no-verify origin *:refs/heads/notes/*)",
+      "Bash(git push origin claude/*)",
+      "Bash(git push -u origin claude/*)",
+      "Bash(git push origin HEAD:claude/*)",
+      "Bash(git push -u origin HEAD:claude/*)",
+      "Bash(git push origin HEAD:refs/heads/claude/*)",
+      "Bash(git push --no-verify origin HEAD:claude/*)",
+      "Bash(git push origin chore/*)",
+      "Bash(git push -u origin chore/*)",
+      "Bash(git push origin HEAD:chore/*)",
+      "Bash(git push -u origin HEAD:chore/*)",
+      "Bash(git push origin HEAD:refs/heads/chore/*)",
+      "Bash(git push --no-verify origin HEAD:chore/*)",
+      "Bash(bash */skills/cloud/scripts/watch-status.sh *)",
+      "Bash(WATCH_INTERVAL=* bash */skills/cloud/scripts/watch-status.sh *)",
+      "mcp__claude-code-remote__send_message",
+      "mcp__claude-code-remote__list_sessions",
+      "mcp__claude-code-remote__get_session",
+      "mcp__claude-code-remote__create_session",
+      "mcp__claude-code-remote__archive_session",
+      "mcp__claude-code-remote__list_events",
+      "mcp__claude-code-remote__add_repo"
+    ],
+    "deny": [
+      "Bash(git push *--force*)",
+      "Bash(git push -f*)",
+      "Bash(git push * -f*)",
+      "Bash(git push *+*)",
+      "Bash(git push *--delete*)",
+      "Bash(git push -d *)",
+      "Bash(git push * -d *)",
+      "Bash(git push * :*/*)",
+      "Bash(git push * :* *)",
+      "Bash(git push *--mirror*)",
+      "Bash(git push *--prune*)",
+      "Bash(git push * master)",
+      "Bash(git push * master *)",
+      "Bash(git push *:master*)",
+      "Bash(git push *refs/heads/master*)",
+      "Bash(git push * main)",
+      "Bash(git push * main *)",
+      "Bash(git push *:main*)",
+      "Bash(git push *refs/heads/main*)"
+    ]
+  }
+}

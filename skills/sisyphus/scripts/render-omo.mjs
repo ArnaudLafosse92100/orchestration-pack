@@ -1,0 +1,31 @@
+import * as O from "./dist/index.js";
+import fs from "node:fs";
+const [,, CFGDIR, out] = process.argv;
+const OPUS="anthropic/claude-opus-5";
+for (const d of ["agents","categories","misc","skills"]) fs.mkdirSync(`${out}/${d}`,{recursive:true});
+const cfg = JSON.parse(fs.readFileSync(`${CFGDIR}/oh-my-openagent.json`,"utf8"));
+const resolve = (s)=> (typeof s==="string" && s.startsWith("file://")) ? fs.readFileSync(s.replace("file://~/.config/opencode", CFGDIR),"utf8") : (s ?? "");
+const fix=(o)=>{const c={...o, model:OPUS}; delete c.fallback_models; delete c.variant; delete c.reasoningEffort; if (c.prompt_append) c.prompt_append = resolve(c.prompt_append); return c;};
+const overrides = Object.fromEntries(Object.entries(cfg.agents).map(([k,v])=>[k,fix(v)]));
+const cats = Object.fromEntries(Object.entries(cfg.categories).map(([k,v])=>[k,fix(v)]));
+const w=(p,s)=>fs.writeFileSync(`${out}/${p}`, s);
+const agents = await O.createBuiltinAgents(cfg.disabled_agents, overrides, process.cwd(), OPUS, cats, cfg.git_master, [], undefined, "playwright", OPUS, new Set(cfg.disabled_skills), true, true, true);
+for (const [n,a] of Object.entries(agents)) w(`agents/${n}.md`, a.prompt ?? "");
+w("agents/sisyphus-junior.md", O.buildSisyphusJuniorPrompt(OPUS, true, overrides["sisyphus-junior"]?.prompt_append));
+w("agents/sisyphus-junior.base.md", O.buildSisyphusJuniorPrompt(OPUS, true, undefined));
+w("agents/hephaestus.md", O.buildDynamicHephaestusPrompt({model:"openai/gpt-5.6-sol", useTaskSystem:true}) + "\n\n" + (overrides.hephaestus?.prompt_append??""));
+w("agents/prometheus.md", O.PROMETHEUS_SYSTEM_PROMPT + "\n\n" + (overrides.prometheus?.prompt_append??""));
+w("agents/plan.md", O.buildPlanAgentSystemPrepend([],[]) + "\n\n" + O.buildPlanAgentPromptAppend(cfg.sisyphus_agent?.tdd===true));
+for (const name of new Set([...Object.keys(O.DEFAULT_CATEGORIES), ...Object.keys(cfg.categories)])) {
+  let a = O.CATEGORY_PROMPT_APPENDS[name] ?? ""; const u = cats[name]?.prompt_append;
+  if (u) a = a ? a+"\n\n"+u : u;
+  w(`categories/${name}.md`, `<!-- description: ${O.CATEGORY_DESCRIPTIONS[name]??""} -->\n${a}`);
+}
+w("misc/ultrawork.md", O.getDefaultUltraworkMessage());
+w("misc/ultrawork.planner.md", O.getPlannerUltraworkMessage());
+w("misc/hyperplan.md", O.HYPERPLAN_MESSAGE);
+w("misc/team.md", O.TEAM_MESSAGE);
+w("misc/start-work.md", O.START_WORK_TEMPLATE);
+for (const s of O.createBuiltinSkills({teamModeEnabled:true, disabledSkills:new Set(cfg.disabled_skills)})) w(`skills/${s.name}.md`, s.template ?? JSON.stringify(s,null,1));
+const cmds = O.loadBuiltinCommands([], {}); for (const [n,c] of Object.entries(cmds)) w(`misc/cmd-${n}.md`, c.template ?? "");
+console.log(Object.keys(agents).join(" "));
