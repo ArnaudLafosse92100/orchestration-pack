@@ -119,6 +119,33 @@ Le fondateur délègue à l'Orchestrateur, session <session id de l'Orchestrateu
 ### 12. Stale status goes up (founder decision 2026-10-21)
 - A topic still `en cours` whose status is older than 24 h goes up to the founder with « on continue, on met en pause ou on abandonne ? » and the last status line; the answer is recorded in state.md (pause and abandon then follow rules 8 and 11). This is on top of the 45-minute silence check of §5b step 0, which stays.
 
+### 13. One session per topic, no duplicate launch (observed 2026-10-21: two Sous-orchestrateurs launched twice, 28 min apart)
+- Before any `create_session`, the parent runs `list_sessions` and `git ls-remote origin "refs/heads/notes/<topic>-status"`. A live session with that topic in its title, or an existing status branch, means **continue it** (`send_message`, or a new brief through the answers branch), never a second launch. A launch that seemed to fail (tool error, no status yet) is checked the same way before retrying.
+- If a duplicate exists anyway: the legitimate session is the one whose id is in the first status commit; the other stops at once (answers: « doublon, arrête-toi sans pousser »), is archived with `ARCHIVED (doublon de <id>)`, and the status records it.
+
+### 14. Usage limit: resume at reset, not on the founder's click (observed 2026-10-21: leads idle for hours after the 5-hour limit)
+- A child that hits the limit pushes, if it still can, `MESSAGE MONTANT : BLOQUÉ — limite d'usage, reprise à <heure de reset>`. The Orchestrateur records the reset time in state.md and schedules its own wake at reset + 5 min (`send_later` or the §4 watch), then sends each stopped child `reprends là où tu t'es arrêté` with `send_message`, and checks a new status within 15 min (§5b step 0).
+- No `send_message` towards that child (local parent, elevated session): the founder gets ONE line with the list of sessions to open and click « Réessayer », at reset time, not before.
+
+### 15. A founder decision said in a child session goes up the same day (observed 2026-10-21: decisions given in a lead's chat, a side thread with another lead)
+- The founder may speak in any session. The session that receives a decision copies it, in the founder's words with the time, into its next status under `DÉCISIONS DU FONDATEUR (dites ici)` and applies it only inside its own topic.
+- The Orchestrateur copies each one into state.md (arbitrations log) and, when another topic is touched, into that topic's answers. A child never relays a founder decision to a sibling directly. A decision that contradicts state.md goes back to the founder as one question (rule 7), it does not silently win.
+
+### 16. Shared base guard (observed 2026-10-21: someone else pushed a parallel fix line on the shared base, 27 conflicting files, nobody stopped)
+- Before every push or merge onto a base the topic does not own (`main`, `master`, an integration or lot branch), fetch it and compare with the sha in state.md. If it moved: list `git log --format='%h %an %s' <old>..<new>` and the conflict count (`git merge-tree --write-tree`). Commits not made by this chain of sessions, or any conflict, stop the work on that base: `MESSAGE MONTANT : BLOQUÉ — base <branch> bougée par <auteurs>, <n> conflits` and the Orchestrateur decides (rule 7). Never rebase someone else's commits away, never `--force` a branch the topic did not create.
+- `--force-with-lease` stays allowed only on branches the topic itself created and nobody else uses.
+
+### 17. Test drift goes up (observed 2026-10-21: skipped e2e tests went from 7 to 48 without anyone noticing)
+- Every gate in a status gives `pass / fail / skipped / todo` next to the baseline numbers of the base branch. Any rise in skipped, todo or known failures is a finding: listed in the status with the tests concerned and the reason, and the Orchestrateur either accepts it in state.md with a reason or opens the fix. A gate « vert » with more skips than the baseline is not green.
+
+### 18. Mac-only and paid steps: one list, one owner, the session does not wait open (observed 2026-10-21: Mac commands scattered over several statuses, sessions kept open for days)
+- The Orchestrateur keeps one section `À FAIRE SUR LE MAC` in state.md, one line per item: `<quoi> — commande : <copier-coller> — coût : <0 ou plafond $ approuvé> — résultat attendu par : <session ou Orchestrateur> — ÉCHÉANCE`. It shows the list to the founder at each milestone, merged across topics, never piecemeal.
+- A session whose only remaining step is on the Mac does not stay open for it: it writes its rule 8 owner line (`PROPRIÉTAIRE : fondateur`) and is archived; the result goes to a new session or to the Orchestrateur. Exception: the next step needs the session's context and runs within 24 h, recorded with ÉCHÉANCE (rule 10).
+- A paid step never starts without the founder's cap in $ written in state.md (rule 6).
+
+### 19. Recheck against the live default branch before any PR or "à fusionner" (observed 2026-10-21: a finished branch contradicted a later merge on main)
+- Before a final status proposes a PR, a merge or « à fusionner », the session fetches the default branch again and checks `git merge-tree` plus the files it touches for later changes on the same behaviour. Superseded or contradicted work is marked `OBSOLÈTE — remplacé par <sha/PR>` and handled by rule 11, never proposed for merge.
+
 ## 1. Preflight (always first)
 
 1. `mcp__ccd_session__list_start_targets` (ToolSearch if deferred), read `cloud`. If `available: false`, act on `reason`: `not_on_screen` → ask the user to bring this conversation on screen and retry; `no_github_remote` / `no_readable_git_checkout` → stop and explain in French, no move, no fallback. Otherwise pick a target with `hosted: true` + `fitsRepository: true`; several fit → `isDefault`, else ask. Pass its id as `environment_id` to `move_to_cloud`.
@@ -288,7 +315,8 @@ Only after the user confirms (remote deletion): `git push origin --delete notes/
 - Every launch needs the user's « Démarrer » click when the local permission mode is broad.
 - A locally run conductor pauses while the Mac sleeps; move it to the cloud.
 - A locally run conductor cannot message the cloud sessions it started (§5a « Placement »): resuming a stopped lead is always the user's click.
-- One usage limit for the whole account: when it is hit, the conductor, every lead and every local agent stop together; after the reset, leads do not resume by themselves.
+- One usage limit for the whole account: when it is hit, the conductor, every lead and every local agent stop together; after the reset, leads do not resume by themselves. Rule 14 makes the Orchestrateur resume them.
+- A child cannot `send_message` an Orchestrateur that became « elevated » (it was allowed to reach the founder's Mac sessions): « elevated_session_untrusted_device ». The status line (rule 5bis) is then the only upward channel; keep the Orchestrateur on cloud-only sessions when possible.
 - Permission mode can only be set programmatically for local starts.
 - Cloud environments may lack Docker image pulls, browsers or DB access: those checks stay local or with the owner.
 
