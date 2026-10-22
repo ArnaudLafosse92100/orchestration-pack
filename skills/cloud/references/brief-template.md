@@ -61,7 +61,8 @@ UPWARD MESSAGE (founder rule, never end a turn silently)
 PARENT: <session id of the session that creates this one>
 After each turn that produced something, the FIRST line of status.md is the message, pushed with it: « MESSAGE MONTANT : INFO — <topic>/<task> : <1-3 lines>. Statut <ref> @ <sha>. »
 When the task is entirely done (pushed, gates run, nothing open): « MESSAGE MONTANT : FINI, À ARCHIVER — <topic>/<task> : branche <b> @ <sha>, statut done, aucune question ouverte, rien de non poussé. »
-This status line is the normal channel: it works whatever the tools (a cloud PARENT can also be woken by send_message; a local Mac PARENT cannot be reached from the cloud), and the PARENT's git watch reads it. Check once (ToolSearch select:send_message) and write « send_message: present | absent » in status. Present: also send the same line to PARENT after the push. Present but refused: first line « MESSAGE MONTANT NON REMIS (<error>) : <line> ».
+This status line is the normal channel: it works whatever the tools (a cloud PARENT can also be woken by send_message; a local Mac PARENT cannot be reached from the cloud), and the PARENT's git watch reads it. Check once (ToolSearch select:send_message) and write « send_message: present | absent » in status. Present and no « CANAL MONTANT : statut seulement » below: also send the same line once to PARENT after the push. Refused: normal, the status line already delivered it; keep « MESSAGE MONTANT : … » unchanged (never « NON REMIS »), note « send_message: refusé, canal = statut », stop calling send_message for this session, and never ask the founder to relay.
+CANAL MONTANT : <statut seulement | statut + send_message>  (parent fills it; « statut seulement » when the parent is elevated or local)
 
 FINAL REPORT FORMAT
 - Commits: sha + subject, one per line
