@@ -86,9 +86,10 @@ these run without a prompt:
   `get_session`, `create_session`, `archive_session`, `list_events`, `add_repo`.
 
 Denied (deny beats allow, in every mode, for the founder too in that repo): any push with
-`--force*`, `-f`, a `+` refspec, `--delete`/`-d`, an empty-source `:ref`, `--mirror`, `--prune`,
-and any push naming `master` or `main`. Limits, from the official permissions doc: rules match
-the command text, so `git -C <dir> push …` or `git push origin HEAD` while on master are not
+`--force*`, `-f`, a `+` refspec, `--delete`/`-d`, an empty-source `:ref`, `--mirror`, `--prune`.
+Pushes naming `master` or `main` are no longer denied (founder decision, 26 Oct 2026); they run
+under the usual classifier, and no allow rule covers them. Limits, from the official permissions doc: rules match
+the command text, so `git -C <dir> push …` or `git push origin HEAD` are not
 matched (the classifier still judges them; the briefs never use those forms), nor is a
 one-segment deletion `git push origin :foo` as the last argument (a rule ending in `:*` is read
 as a trailing wildcard; `:a/b` and `:foo <more>` are denied); allow rules
