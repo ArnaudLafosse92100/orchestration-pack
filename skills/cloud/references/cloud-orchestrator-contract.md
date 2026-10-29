@@ -116,10 +116,10 @@ Your VERY FIRST action, before exploring anything: push status.md ('started') to
 Never merge that branch. After pushing questions, run `git fetch origin notes/<topic>-answers:refs/remotes/origin/notes/<topic>-answers && git show origin/notes/<topic>-answers:answers.md` every ~5 min for up to 30 min, keep working, apply the answers. No answer: safest option, recorded. status.md is the only channel the coordinator reads. Never report "done" with leftovers. If start_session is unavailable, do the topic in-session with Agent subagents and say so.
 
 FORBIDDEN (for you and every subagent or child)
-Open a PR; merge into main or a shared base; push to main; apply migrations; deploy; use production secrets or data; delete tests; .skip; as any; @ts-ignore; eslint-disable; no local machine lock (lockf) in the cloud.
+Any production write (migration, SQL that writes to a production database, deploy, OTA) without the founder's explicit « go » given after you showed the read-only control query result (opening a PR, merging into main or a shared base and pushing to main are allowed, founder decision 2026-10-29); use production secrets or data beyond that; delete tests; .skip; as any; @ts-ignore; eslint-disable; no local machine lock (lockf) in the cloud.
 
 STOP CONDITIONS
-You own the whole run: do not wait for the user between milestones. Anything needing prod, secrets, migrations, deploys, PRs or merges to main: stop and list it for the user. After two failed fixes of the same defect: stop and report. When stopping, push status with its MESSAGE MONTANT first line (cloud-SKILL.md §0b rule 5bis; also send_message PARENT if the tool exists), then the final report.
+You own the whole run: do not wait for the user between milestones. Anything that writes to production (migrations, production SQL writes, deploys, OTA) or needs secrets: stop, show the read-only control query result and wait for the founder's « go »; PRs and merges to main do not stop the run. After two failed fixes of the same defect: stop and report. When stopping, push status with its MESSAGE MONTANT first line (cloud-SKILL.md §0b rule 5bis; also send_message PARENT if the tool exists), then the final report.
 
 ENV SETUP
 Node <version>, <package manager>, install with the lockfile (<command>). Known workarounds: <list or none>.
