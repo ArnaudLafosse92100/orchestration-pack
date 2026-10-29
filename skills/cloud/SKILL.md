@@ -326,5 +326,5 @@ Only after the user confirms (remote deletion): `git push origin --delete notes/
 - Start a "cloud" session without a hosted environment, or claim cloud without evidence.
 - Use `start_session` as a substitute for a `move_to_cloud` refusal of kind (a) or (b).
 - Push a refspec with an empty source, or put secrets or `.env` content on a notes branch.
-- Let a cloud session open PRs, merge, push to main or shared bases, apply migrations or deploy, unless the user explicitly asked.
+- Let a cloud session write to production (apply a migration, run SQL that writes to a production database, deploy Edge functions, web apps or OTA updates) without the founder's explicit « go » for that write, given after the session showed the result of a read-only control query. Opening PRs, merging and pushing to main or shared bases are allowed (founder decision 2026-10-29) once the repo's local gate passed and rule 16 holds. Today no cloud environment has Supabase, Vercel or Expo access, so production writes still run from the Mac.
 - Copy this skill, or any local skill, into `~/.claude/skills` or `~/.codex/skills` as a physical folder, except through `sync.sh` of the source repo `ArnaudLafosse92100/orchestration-pack` (the single source for /cloud, /sisyphus, their agents and hooks).
