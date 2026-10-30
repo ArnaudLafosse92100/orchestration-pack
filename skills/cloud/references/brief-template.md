@@ -50,7 +50,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 Push with: git push -u origin <track-branch>-final   (no --force, no --no-verify for the final push); report <track-branch>-final as the branch to review and merge.
 
 FORBIDDEN
-Any production write (migration, SQL that writes to a production database, deploy, OTA) without the founder's explicit « go » given after you showed the read-only control query result (opening a PR, merging and pushing to main or a shared base are allowed, founder decision 2026-10-29); delete tests; .skip; as any; @ts-ignore; eslint-disable. No local machine lock (lockf) in the cloud.
+Any production write (migration, SQL that writes to a production database, deploy, OTA) without the founder's explicit « go » given after you showed the read-only control query result (opening a PR and merging into main or a shared base are allowed only under the 4 merge conditions of cloud-SKILL.md rule 6, including the `Part au prochain déploiement` section); delete tests; .skip; as any; @ts-ignore; eslint-disable. No local machine lock (lockf) in the cloud.
 
 DEPENDENCIES (only if this track is based on another)
 Track <X> (branch origin/<X>) must land <what> first. Every ~10 min: git fetch origin <X> && git log --oneline <old-base-sha>..origin/<X> | grep -i "<marker>"
